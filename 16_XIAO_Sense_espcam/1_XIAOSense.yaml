@@ -1,0 +1,60 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://wiki.seeedstudio.com/XIAO_ESP32S3_esphome/#ov2640-camera-xiao-esp32s3-sense
+# https://esphome.io/components/esp32_camera.html
+
+# Configuration for ESPHome
+esphome:
+  # Name of the ESP32-S3 device
+  name: esp32s3
+  # PlatformIO build options
+  platformio_options:
+    build_flags: -DBOARD_HAS_PSRAM
+    board_build.arduino.memory_type: qio_opi
+    board_build.f_flash: 80000000L
+    board_build.flash_mode: qio  
+
+# Configuration for ESP32
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino    
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Wi-Fi configuration
+wifi:
+  ssid: "esphome"
+  password: "BinaryBuff[64]Overflow"
+
+# Configuration for the ESP32 Camera
+esp32_camera:
+  id: espcam
+  name: My Camera
+  external_clock:
+    pin: GPIO10
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO40
+    scl: GPIO39
+  data_pins: [GPIO15, GPIO17, GPIO18, GPIO16, GPIO14, GPIO12, GPIO11, GPIO48]
+  vsync_pin: GPIO38
+  href_pin: GPIO47
+  pixel_clock_pin: GPIO13
+  resolution: 800x600
+  
+# Configuration for the ESP32 Camera Web Server
+esp32_camera_web_server:
+  - port: 8080
+    mode: stream
+  - port: 8081
+    mode: snapshot  

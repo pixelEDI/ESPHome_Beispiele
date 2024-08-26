@@ -1,0 +1,33 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+
+substitutions:
+ device_name: office
+ device_board: seeed_xiao_esp32c3
+ device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+sensor:
+  - platform: mqtt_subscribe
+    name: "meinlicht mqtt data"
+    id: mqttsensor
+    topic: esphome/meinlicht
+    on_value:
+      then:
+        - output.turn_on: led1
+
+output:
+  - platform: gpio
+    pin: GPIO9
+    id: led1

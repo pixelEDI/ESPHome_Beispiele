@@ -1,0 +1,61 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10    
+#                    D4  6         9 D9     
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO4
+    name: "btn1"
+    id: btn1
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - script.execute: blink_script
+
+light:
+  - platform: binary
+    id: blinkende_led
+    output: led_output
+
+output:
+  - platform: gpio
+    pin: GPIO10
+    id: led_output
+
+script:
+  - id: blink_script
+    mode: single
+    then:
+      - repeat:
+          count: 10
+          then:
+            - light.toggle: blinkende_led
+            - delay: 300ms
+      - light.turn_off: blinkende_led

@@ -1,0 +1,61 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10    
+#     SDA            D4  6         9 D9     
+#     SCL            D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+  max_val: "30"
+
+packages:
+  base: !include ../00_common/main.yaml
+
+esp32_ble_tracker:
+  scan_parameters:
+    continuous: true
+  on_ble_advertise:
+    - mac_address: 34:85:18:03:59:22
+      then:
+        - switch.turn_on: led
+        - script.execute: reset_timer
+        - lambda: |-
+            ESP_LOGD("ble_adv", "New BLE device");
+            ESP_LOGD("ble_adv", "  address: %s", x.address_str().c_str());
+
+script:
+  - id: reset_timer           
+    then: 
+      - script.stop: device_timeout
+      - script.execute: device_timeout
+
+  - id: device_timeout
+    mode: queued
+    then:
+      - delay: 10s
+      - switch.turn_off: led
+
+switch:
+  - platform: gpio
+    id: led
+    pin: GPIO10
+    name: LED

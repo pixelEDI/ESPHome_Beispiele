@@ -1,0 +1,69 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10  -> LED mit Vorwiderstand
+#                    D4  6         9 D9
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO4
+    id: binarysensor1
+    name: "Button1"
+    on_press:
+      - while:
+          condition:
+            binary_sensor.is_on: binarysensor1
+          then:
+            - light.dim_relative:
+                id: led1
+                relative_brightness: 5%
+                transition_length: 0.2s
+            - delay: 0.1s
+  - platform: gpio
+    pin: GPIO5
+    id: binarysensor2
+    name: "Button2"
+    on_press:
+      - while:
+          condition:
+            binary_sensor.is_on: binarysensor2
+          then:
+            - light.dim_relative:
+                id: led1
+                relative_brightness: -5%
+                transition_length: 0.5s
+            - delay: 0.5s
+output:
+  - platform: ledc
+    pin: GPIO10
+    id: led1_output
+
+light:
+  - platform: monochromatic
+    name: "led1"
+    id: led1
+    output: led1_output

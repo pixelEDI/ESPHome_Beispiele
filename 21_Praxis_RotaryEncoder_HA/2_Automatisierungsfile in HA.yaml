@@ -1,0 +1,19 @@
+# in Home Assistant - Automatisierung
+# Die Werte von Rotary Encoder werden durch 100 dividiert
+
+alias: Sonos Volume
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.rotary_encoder
+condition: []
+action:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: "{{ states('sensor.rotary_encoder') | int / 100 }}"
+    target:
+      entity_id: media_player.kuche
+mode: single
+

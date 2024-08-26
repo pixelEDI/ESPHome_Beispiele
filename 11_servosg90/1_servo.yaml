@@ -1,0 +1,65 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10    
+#                    D4  6         9 D9     
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 4
+    name: "Button1"
+    on_press:
+      - servo.write:
+          id: servo1
+          level: -100%
+      - output.turn_on: led1
+
+  - platform: gpio
+    pin:
+      number: 5
+    name: "Button2"
+    on_press:
+      - servo.write:
+          id: servo1
+          level: 100%
+      - output.turn_off: led1
+      
+servo:
+  - id: servo1
+    output: pwm_output
+    transition_length: 2s
+
+output:
+  - platform: ledc
+    id: pwm_output
+    pin: GPIO3
+    frequency: 50 Hz
+  - platform: gpio
+    id: led1
+    pin: GPIO10

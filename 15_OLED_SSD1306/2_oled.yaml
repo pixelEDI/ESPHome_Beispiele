@@ -1,0 +1,46 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome | 09.2024
+# https://wiki.seeedstudio.com/XIAO_ESP32S3_esphome/#ov2640-camera-xiao-esp32s3-sense
+# https://esphome.io/components/esp32_camera.html
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+  max_val: "30"
+
+packages:
+  base: !include ../00_common/main.yaml
+
+i2c:
+  sda: GPIO6
+  scl: GPIO7
+  scan: false
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    lambda: |-
+      it.printf(0, 0, id(myfont), "Poti %.0f", id(poti).state);
+font:
+  - file: 'Ubuntu-Regular.ttf'
+    id: myfont
+    size: 14
+
+sensor:
+  - platform: adc
+    pin: GPIO2
+    name: "Poti Wert"
+    id: poti
+    raw: true
+    update_interval: 10ms
+    attenuation: 12db

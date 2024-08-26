@@ -1,0 +1,46 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10  -> LED mit Vorwiderstand
+#                    D4  6         9 D9
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+light:
+  - platform: binary
+    name: "myled"
+    id: myled
+    icon: "mdi:lightbulb"
+    output: myled_output
+
+output:
+  - platform: gpio
+    pin: GPIO9
+    id: myled_output
+
+interval:
+  - interval: 3s
+    then:
+      - light.toggle: myled

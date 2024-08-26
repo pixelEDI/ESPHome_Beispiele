@@ -1,0 +1,45 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10    
+#     SDA            D4  6         9 D9     
+#     SCL            D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+  max_val: "30"
+
+packages:
+  base: !include ../00_common/main.yaml
+
+  # "uuidgen" im linux terminal zum Generieren von UUIDs
+  # windows - powershell "[guid]::NewGuid()" Command nicht von mir getestet
+
+  #mac address via nRF Connect Android app
+  # Alternativ via esptool cli
+  # "esptool.py read_mac"
+
+esp32_ble_beacon:
+  type: iBeacon
+  id: my_beacon
+  uuid: 'a2b8fce9-cc50-4ae3-bcd6-bedb7aabf49e'
+  major: 1
+  minor: 1

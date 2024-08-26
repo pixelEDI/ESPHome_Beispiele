@@ -1,0 +1,30 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+
+substitutions:
+ device_name: office
+ device_board: seeed_xiao_esp32c3
+ device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+mqtt:
+  on_connect:
+    - output.turn_on: led1
+  on_disconnect:
+    - output.turn_off: led1
+
+output:
+  - platform: gpio
+    pin: GPIO10
+    id: led1
