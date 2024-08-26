@@ -1,0 +1,44 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "esphome config",
+            "type": "shell",
+            "command": "esphome config ${file}",
+            "options":{
+                "statusbar": {
+                    "label": "esphome config",
+                    "color": "#d8780a",
+                    "backgroundColor": "#000"
+                }
+            }
+        },
+        {
+            "label": "esphome run",
+            "type": "shell",
+            "command": "esphome run ${file}",
+            "options":{
+                "statusbar": {
+                    "label": "esphome run",
+                    "color": "#11df0d",
+                    "backgroundColor": "#000"
+                }
+            }
+        },
+        {
+            "label": "esphome logs",
+            "type": "shell",
+            "command": "esphome logs ${file}",
+            "options":{
+                "statusbar": {
+                    "label": "esphome logs",
+                    "color": "#7c2c7c",
+                    "backgroundColor": "#000"
+                }
+            }
+        }
+            
+    ]
+}
