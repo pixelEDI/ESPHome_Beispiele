@@ -1,0 +1,60 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10  
+#                    D4  6         9 D9
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+font:
+  - file: 'Ubuntu-Regular.ttf'
+    id: font1
+    size: 20
+
+spi:
+  clk_pin: GPIO8
+  mosi_pin: GPIO10
+
+display:
+  - platform: waveshare_epaper
+    id: epaper
+    cs_pin: GPIO5
+    dc_pin: GPIO2
+    busy_pin: GPIO4
+    reset_pin: GPIO3
+    model: 1.54inv2
+    full_update_every: 60
+    update_interval: 60s
+    reset_duration: 200ms  
+    #lamda beispiel für tempsensor
+    # it.printf(80, 20, id(font1), "%.1f", id(outside_temperature).state);
+      
+    lambda: |-
+      it.print(0, 0, id(font1), "Hello pixeledi");
+      it.printf(50, 50, id(font1), "%d millis", millis());
+
+deep_sleep:
+  run_duration: 10s
+  sleep_duration: 10s

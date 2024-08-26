@@ -1,0 +1,103 @@
+#        _          _ ______ _____ _____
+#       (_)        | |  ____|  __ \_   _|
+#  _ __  ___  _____| | |__  | |  | || |
+# | '_ \| \ \/ / _ \ |  __| | |  | || |
+# | |_) | |>  <  __/ | |____| |__| || |_
+# | .__/|_/_/\_\___|_|______|_____/_____|
+# | |
+# |_|
+# https://links.pixeledi.eu
+# ESPHome Kurs | 09.2024
+#
+#                        ESP32 XIAO
+#                        +---------+
+#                    D0  2        5V 
+#                    D1  3       GND 
+#                    D2  4       3V3 
+#                    D3  5        10 D10  
+#                    D4  6         9 D9
+#                    D5  7         8 D8
+#                    D6  21       20 D7
+#                        +---------+
+
+substitutions:
+  device_name: office
+  device_board: seeed_xiao_esp32c3
+  device_type: arduino
+
+packages:
+  base: !include ../00_common/main.yaml
+
+http_request:
+  verify_ssl: false
+
+wifi:
+  on_connect:
+    then:
+      - script.execute: http_request_script
+
+script:
+  - id: http_request_script
+    then:
+      - http_request.get:
+          url: "https://api.coindesk.com/v1/bpi/currentprice.json"
+          headers:
+            Content-Type: application/json        
+          capture_response: true
+          on_response:
+            then:
+              - lambda: |-
+                  json::parse_json(body, [](JsonObject root) -> bool {
+                      float btc_price = root["bpi"]["EUR"]["rate_float"];
+                      id(btc_price_sensor).publish_state(btc_price);
+                      ESP_LOGD("main", "Bitcoin Price: %.1f EUR", btc_price);
+                      return true;
+                  });
+      - delay: 1s
+      - display.page.show: epape_page_btc
+      - component.update: myepaper154
+      - deep_sleep.enter: deep_sleep_mode
+
+
+sensor:
+  - platform: template
+    id: btc_price_sensor
+    name: "Bitcoin Price"
+    unit_of_measurement: "EUR"
+    accuracy_decimals: 2
+    icon: "mdi:bitcoin"
+
+font:
+  - file: 'Ubuntu-Regular.ttf'
+    id: font1
+    size: 20
+  - file: 'Ubuntu-Regular.ttf'
+    id: font2
+    size: 40
+
+spi:
+  clk_pin: GPIO8
+  mosi_pin: GPIO10
+
+display:
+  - platform: waveshare_epaper
+    id: myepaper154
+    cs_pin: GPIO5
+    dc_pin: GPIO2
+    busy_pin: GPIO4
+    reset_pin: GPIO3
+    model: 1.54inv2
+    full_update_every: 60
+    update_interval: never
+    reset_duration: 200ms  
+    pages:
+      - id: epape_page_btc
+        lambda: |-
+          it.print(0, 0, id(font1), "Bin ich schon reich?");
+          it.printf(35, 40, id(font2), "%.0f", id(btc_price_sensor).state);
+          it.printf(70, 80, id(font1), "EUR");
+
+deep_sleep:
+  id: deep_sleep_mode
+  run_duration: 10s
+  sleep_duration: 10s
