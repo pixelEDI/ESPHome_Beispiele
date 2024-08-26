@@ -4,11 +4,11 @@ Dieses Repository enthält die Codebeispiele und Projekte, die im Online-Kurs (h
 
 ## Inhalte
 
-- **01_Basics:** Grundlegende ESPHome Konfigurationen und einfache Beispiele.
-- **02_Sensoren:** Anbindung und Konfiguration von verschiedenen Sensoren.
-- **03_Aktoren:** Steuerung von Aktoren wie Relais und LEDs.
-- **04_Automationen:** Automatisierungen und fortgeschrittene Szenarien mit ESPHome.
-- **05_Home_Assistant:** Integration von ESPHome Geräten in Home Assistant.
+- **Basics:** Grundlegende ESPHome Konfigurationen und einfache Beispiele.
+- **Sensoren:** Anbindung und Konfiguration von verschiedenen Sensoren.
+- **Aktoren:** Steuerung von Aktoren wie Relais und LEDs.
+- **Automationen:** Automatisierungen und fortgeschrittene Szenarien mit ESPHome.
+- **Home_Assistant:** Integration von ESPHome Geräten in Home Assistant.
 
 ## Vorschläge für Kursteilnehmer
 
