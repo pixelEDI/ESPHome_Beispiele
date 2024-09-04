@@ -35,6 +35,7 @@ logger:
 switch:
   - platform: gpio
     pin: GPIO10
+    id: led
 
 interval:
   - interval: 1s
